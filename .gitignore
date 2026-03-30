@@ -1,0 +1,21 @@
+# Configuración local
+config/db_local.php
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# XAMPP specific
+xampp/
+
+# Archivos de instalación (seguridad)
+install.php
+arreglar_admin.php
+diagnostico.php
