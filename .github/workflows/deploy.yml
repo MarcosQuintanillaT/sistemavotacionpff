@@ -25,3 +25,4 @@ jobs:
             .gitignore
             README.md
             test_hosting.php
+            config/db.php
