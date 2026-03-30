@@ -1,6 +1,7 @@
 <?php
 // ==========================================
-// Configuración de conexión a Base de Datos
+// CONFIGURACIÓN DE BASE DE DATOS
+// Compatible con: XAMPP, Railway, Heroku, InfinityFree
 // ==========================================
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
@@ -8,30 +9,39 @@ ini_set('display_errors', '0');
 
 // ==========================================
 // DETECCIÓN AUTOMÁTICA DE ENTORNO
-// Si estás en hosting, cambia IS_HOSTING a true
-// y pon los datos de tu hosting abajo.
+// Railway proporciona variables de entorno automáticamente
 // ==========================================
 
-$IS_HOSTING = true; // Cambiar a false para XAMPP local
+if (getenv('MYSQLHOST') || getenv('MYSQL_URL')) {
+    // === RAILWAY / CLOUD ===
+    if (getenv('MYSQL_URL')) {
+        $db_url = parse_url(getenv('MYSQL_URL'));
+        define('DB_HOST', $db_url['host']);
+        define('DB_USER', $db_url['user']);
+        define('DB_PASS', $db_url['pass']);
+        define('DB_NAME', ltrim($db_url['path'], '/'));
+    } else {
+        define('DB_HOST', getenv('MYSQLHOST'));
+        define('DB_USER', getenv('MYSQLUSER'));
+        define('DB_PASS', getenv('MYSQLPASSWORD'));
+        define('DB_NAME', getenv('MYSQLDATABASE'));
+    }
+    define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
 
-if ($IS_HOSTING) {
-    // === DATOS DE TU HOSTING (InfinityFree) ===
-    define('DB_HOST', 'sql212.infinityfree.com');
-    define('DB_NAME', 'if0_41510758_elecciones');
-    define('DB_USER', 'if0_41510758');
-    define('DB_PASS', 'TU_CONTRASEÑA_AQUI'); // <-- Pon tu contraseña real aquí
 } else {
-    // === DATOS LOCAL (XAMPP) ===
+    // === LOCAL (XAMPP) ===
     define('DB_HOST', 'localhost');
     define('DB_NAME', 'elecciones_estudiantiles');
     define('DB_USER', 'root');
     define('DB_PASS', '');
+    define('DB_PORT', '3306');
 }
 
 function getConnection() {
     try {
+        $port = defined('DB_PORT') ? DB_PORT : '3306';
         $conn = new PDO(
-            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+            "mysql:host=" . DB_HOST . ";port=$port;dbname=" . DB_NAME . ";charset=utf8mb4",
             DB_USER,
             DB_PASS,
             [
@@ -42,34 +52,19 @@ function getConnection() {
         );
         return $conn;
     } catch (PDOException $e) {
-        // Detectar si es una llamada API o una página HTML
-        $is_api = strpos($_SERVER['SCRIPT_NAME'], '/api/') !== false;
+        $is_api = strpos($_SERVER['SCRIPT_NAME'] ?? '', '/api/') !== false;
 
         if ($is_api) {
             header('Content-Type: application/json');
             die(json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos']));
         }
 
-        // Mostrar error amigable en páginas HTML
-        echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Error de Conexión</title>';
-        echo '<style>body{font-family:sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}';
-        echo '.box{background:#1e293b;padding:40px;border-radius:16px;text-align:center;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}';
-        echo '.icon{font-size:64px;margin-bottom:16px}h1{color:#ef4444;margin-bottom:8px}p{color:#94a3b8;line-height:1.6}';
-        echo '.btn{display:inline-block;padding:12px 24px;background:#6366f1;color:white;border-radius:8px;text-decoration:none;margin-top:20px;font-weight:bold}';
-        echo '.btn:hover{background:#4f46e5}.steps{text-align:left;background:#0f172a;padding:16px;border-radius:8px;margin-top:16px;font-size:13px}';
-        echo '.steps li{margin:6px 0;color:#94a3b8}</style></head><body>';
-        echo '<div class="box">';
-        echo '<div class="icon">🔌</div>';
-        echo '<h1>Error de Conexión</h1>';
-        echo '<p>No se pudo conectar a la base de datos MySQL.</p>';
-        echo '<div class="steps"><strong>Pasos para solucionarlo:</strong><ol>';
-        echo '<li>Abre el <strong>Panel de Control de XAMPP</strong></li>';
-        echo '<li>Inicia <strong>Apache</strong> (botón Start)</li>';
-        echo '<li>Inicia <strong>MySQL</strong> (botón Start)</li>';
-        echo '<li>Asegúrate que ambos muestren <span style="color:#10b981">verde</span></li>';
-        echo '<li>Luego haz clic en el botón de abajo</li>';
-        echo '</ol></div>';
-        echo '<a href="/elecciones_estudiantiles/diagnostico.php" class="btn">🔧 Ejecutar Diagnóstico</a>';
+        echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Error</title>';
+        echo '<style>body{font-family:sans-serif;background:#0a192f;color:#e6f1ff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}';
+        echo '.box{background:#112240;padding:40px;border-radius:16px;text-align:center;max-width:500px}';
+        echo '.icon{font-size:64px}h1{color:#ff6b6b}p{color:#8892b0;line-height:1.6}</style></head><body>';
+        echo '<div class="box"><div class="icon">🔌</div><h1>Error de Conexión</h1>';
+        echo '<p>No se pudo conectar a la base de datos.</p>';
         echo '</div></body></html>';
         exit;
     }
@@ -132,6 +127,6 @@ function logAuditoria($accion, $detalles = '') {
             $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'
         ]);
     } catch (Exception $e) {
-        // Silenciar errores de auditoría
+        // Silenciar
     }
 }
