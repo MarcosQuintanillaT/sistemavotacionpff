@@ -6,6 +6,26 @@
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 ini_set('display_errors', '0');
 
+/**
+ * ==========================================
+ * CONFIGURACIÓN DE BASE DE DATOS
+ * ==========================================
+ *
+ * LOCAL (XAMPP):
+ *   DB_HOST = 'localhost'
+ *   DB_NAME = 'elecciones_estudiantiles'
+ *   DB_USER = 'root'
+ *   DB_PASS = ''
+ *
+ * HOSTING (InfinityFree / 000webhost / etc):
+ *   DB_HOST = 'localhost'  (normalmente localhost)
+ *   DB_NAME = 'epiz_XXXXX_elecciones'  (tu nombre de BD real)
+ *   DB_USER = 'epiz_XXXXX'  (tu usuario de BD real)
+ *   DB_PASS = 'tu_contraseña'  (tu contraseña de BD real)
+ *
+ * Cambia los valores según tu entorno.
+ * ==========================================
+ */
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'elecciones_estudiantiles');
 define('DB_USER', 'root');
