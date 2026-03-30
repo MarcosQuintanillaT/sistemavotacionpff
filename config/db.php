@@ -6,30 +6,27 @@
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 ini_set('display_errors', '0');
 
-/**
- * ==========================================
- * CONFIGURACIÓN DE BASE DE DATOS
- * ==========================================
- *
- * LOCAL (XAMPP):
- *   DB_HOST = 'localhost'
- *   DB_NAME = 'elecciones_estudiantiles'
- *   DB_USER = 'root'
- *   DB_PASS = ''
- *
- * HOSTING (InfinityFree / 000webhost / etc):
- *   DB_HOST = 'localhost'  (normalmente localhost)
- *   DB_NAME = 'epiz_XXXXX_elecciones'  (tu nombre de BD real)
- *   DB_USER = 'epiz_XXXXX'  (tu usuario de BD real)
- *   DB_PASS = 'tu_contraseña'  (tu contraseña de BD real)
- *
- * Cambia los valores según tu entorno.
- * ==========================================
- */
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'elecciones_estudiantiles');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// ==========================================
+// DETECCIÓN AUTOMÁTICA DE ENTORNO
+// Si estás en hosting, cambia IS_HOSTING a true
+// y pon los datos de tu hosting abajo.
+// ==========================================
+
+$IS_HOSTING = true; // Cambiar a false para XAMPP local
+
+if ($IS_HOSTING) {
+    // === DATOS DE TU HOSTING (InfinityFree) ===
+    define('DB_HOST', 'sql212.infinityfree.com');
+    define('DB_NAME', 'if0_41510758_elecciones');
+    define('DB_USER', 'if0_41510758');
+    define('DB_PASS', 'TU_CONTRASEÑA_AQUI'); // <-- Pon tu contraseña real aquí
+} else {
+    // === DATOS LOCAL (XAMPP) ===
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'elecciones_estudiantiles');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+}
 
 function getConnection() {
     try {
