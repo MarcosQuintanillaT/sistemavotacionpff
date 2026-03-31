@@ -18,7 +18,7 @@ jobs:
           php-version: '8.1'
 
       - name: Deploy to InfinityFree via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.0
+        uses: SamKirkland/FTP-Deploy-Action@4.3
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
