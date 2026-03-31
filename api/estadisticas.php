@@ -52,7 +52,7 @@ try {
 
     // Líderes por cargo
     $stmt = $db->query("
-        SELECT ca.nombre AS cargo, u.nombre AS lider, COUNT(v.id) AS votos, IFNULL(p.color, '#6366f1') AS color
+        SELECT ca.nombre AS cargo, u.nombre AS lider, COUNT(v.id) AS votos, IFNULL(p.color, '#22c55e') AS color
         FROM candidatos c
         JOIN usuarios u ON c.usuario_id = u.id
         JOIN cargos ca ON c.cargo_id = ca.id

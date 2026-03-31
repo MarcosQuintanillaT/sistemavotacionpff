@@ -15,7 +15,7 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidatos Admin — Elecciones Estudiantiles</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=13">
 </head>
 <body>
 
@@ -34,7 +34,9 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
         <a href="dashboard.php" class="nav-link">📊 <span>Dashboard</span></a>
         <a href="candidatos.php" class="nav-link active">👥 <span>Candidatos</span></a>
         <a href="votantes.php" class="nav-link">🎓 <span>Votantes</span></a>
+        <a href="integracion.php" class="nav-link">🔗 <span>Integración</span></a>
         <a href="../resultados.php" class="nav-link">📈 <span>Resultados</span></a>
+        <a href="auditoria.php" class="nav-link">📋 <span>Auditoría</span></a>
     </div>
     <div class="navbar-user">
         <div class="user-avatar"><?= substr($user['nombre'], 0, 1) ?></div>
@@ -77,6 +79,7 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
             <div class="spinner"></div>
         </div>
     </div>
+
 </div>
 
 <!-- Modal: Agregar Candidato -->
@@ -86,41 +89,53 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
             <h2>➕ Nuevo Candidato</h2>
             <button class="modal-close" onclick="closeModal('modal-add-candidato')">✕</button>
         </div>
-        <form onsubmit="addCandidato(event)">
-            <div class="input-group">
-                <label>Estudiante *</label>
-                <select name="usuario_id" required>
-                    <option value="">Seleccionar estudiante</option>
-                    <?php foreach ($usuarios as $u): ?>
-                    <option value="<?= $u['id'] ?>"><?= htmlspecialchars($u['nombre']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Cargo *</label>
-                <select name="cargo_id" required>
-                    <option value="">Seleccionar cargo</option>
-                    <?php foreach ($cargos as $c): ?>
-                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Partido</label>
-                <select name="partido_id">
-                    <option value="">Sin partido</option>
-                    <?php foreach ($partidos as $p): ?>
-                    <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['nombre']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Número de Candidato</label>
-                <input type="number" name="numero_candidato" placeholder="Ej: 1, 2, 3...">
-            </div>
-            <div class="input-group">
-                <label>Propuesta</label>
-                <textarea name="propuesta" rows="3" placeholder="Describe las propuestas del candidato..."></textarea>
+        <form onsubmit="addCandidato(event)" enctype="multipart/form-data">
+            <div style="display:flex;gap:20px;align-items:flex-start;">
+                <div style="flex:1;">
+                    <div class="input-group">
+                        <label>Estudiante *</label>
+                        <select name="usuario_id" required>
+                            <option value="">Seleccionar estudiante</option>
+                            <?php foreach ($usuarios as $u): ?>
+                            <option value="<?= $u['id'] ?>"><?= htmlspecialchars($u['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Cargo *</label>
+                        <select name="cargo_id" required>
+                            <option value="">Seleccionar cargo</option>
+                            <?php foreach ($cargos as $c): ?>
+                            <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Partido</label>
+                        <select name="partido_id">
+                            <option value="">Sin partido</option>
+                            <?php foreach ($partidos as $p): ?>
+                            <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Número de Candidato</label>
+                        <input type="number" name="numero_candidato" placeholder="Ej: 1, 2, 3...">
+                    </div>
+                    <div class="input-group">
+                        <label>Propuesta</label>
+                        <textarea name="propuesta" rows="3" placeholder="Describe las propuestas del candidato..."></textarea>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <label style="display:block;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--primary-light);text-transform:uppercase;letter-spacing:1px;font-family:'Poppins',sans-serif;">Foto</label>
+                    <div id="candidato-foto-preview" style="width:120px;height:120px;border-radius:12px;border:2px dashed var(--glass-border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin-bottom:8px;" onclick="document.getElementById('candidato-foto-input').click()">
+                        <span style="font-size:36px;color:var(--text-muted);">📷</span>
+                    </div>
+                    <input type="file" id="candidato-foto-input" name="foto" accept="image/*" style="display:none;" onchange="previewCandidatoFoto(this)">
+                    <small class="text-muted" style="font-size:10px;">Click para subir</small>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Registrar Candidato</button>
         </form>
@@ -145,7 +160,7 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
             </div>
             <div class="input-group">
                 <label>Color</label>
-                <input type="color" name="color" value="#6366f1" style="height:50px;cursor:pointer;">
+                <input type="color" name="color" value="#22c55e" style="height:50px;cursor:pointer;">
             </div>
             <div class="input-group">
                 <label>Descripción</label>
@@ -160,6 +175,41 @@ $cargos = $db->query("SELECT id, nombre FROM cargos ORDER BY orden")->fetchAll()
 <script>window.API_BASE_URL = '../api';</script>
 <script src="../assets/js/app.js"></script>
 <script>
+async function loadCandidatosAdmin() {
+    const container = document.getElementById('candidatos-admin-table');
+    if (!container) return;
+    const result = await apiCall('candidatos.php');
+    if (!result.success) return;
+    
+    let html = '<div class="table-container"><table class="data-table"><thead><tr><th>Foto</th><th>#</th><th>Candidato</th><th>Cargo</th><th>Partido</th><th>Propuesta</th><th>Acciones</th></tr></thead><tbody>';
+    result.candidatos.forEach(c => {
+        const fotoHtml = c.usuario_foto 
+            ? `<img src="${c.usuario_foto}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">`
+            : `<div style="width:40px;height:40px;border-radius:8px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;font-size:18px;">👤</div>`;
+        html += `<tr>
+            <td>${fotoHtml}</td>
+            <td><span class="badge" style="background:rgba(99,102,241,0.15);color:#818cf8;padding:4px 10px;border-radius:20px;font-weight:700;">${c.numero_candidato || '-'}</span></td>
+            <td><strong>${c.nombre_candidato}</strong></td>
+            <td>${c.cargo}</td>
+            <td>${c.partido ? `<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:4px;background:${c.partido_color};display:inline-block;"></span>${c.partido}</span>` : '<span class="text-muted">Sin partido</span>'}</td>
+            <td class="text-muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.propuesta || '-'}</td>
+            <td><button class="btn btn-outline" style="padding:4px 12px;font-size:12px;color:#ef4444;border-color:rgba(239,68,68,0.3);" onclick="deleteCandidato(${c.id})">🗑️ Eliminar</button></td>
+        </tr>`;
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+async function deleteCandidato(id) {
+    if (!confirm('¿Eliminar este candidato?')) return;
+    const result = await apiCall(`candidatos.php?id=${id}`, { method: 'DELETE' });
+    showToast(result.message, result.success ? 'success' : 'error');
+    if (result.success) {
+        loadCandidatosAdmin();
+        loadIntegracionMatrix();
+    }
+}
+
 async function loadPartidosAdmin() {
     const container = document.getElementById('partidos-table');
     if (!container) return;
@@ -172,7 +222,7 @@ async function loadPartidosAdmin() {
             <td><div style="width:30px;height:30px;border-radius:8px;background:${p.color};"></div></td>
             <td><strong>${p.nombre}</strong></td>
             <td class="text-muted">${p.slogan || '-'}</td>
-            <td><span class="badge" style="background:rgba(99,102,241,0.15);color:var(--primary-light);padding:4px 12px;border-radius:20px;font-size:12px;">${p.total_candidatos}</span></td>
+            <td><span class="badge" style="background:rgba(34,197,94,0.15);color:var(--primary-light);padding:4px 12px;border-radius:20px;font-size:12px;">${p.total_candidatos}</span></td>
         </tr>`;
     });
     html += '</tbody></table></div>';
@@ -186,8 +236,20 @@ async function addCandidato(e) {
     showToast(result.message, result.success ? 'success' : 'error');
     if (result.success) {
         e.target.reset();
+        document.getElementById('candidato-foto-preview').innerHTML = '<span style="font-size:36px;color:var(--text-muted);">📷</span>';
         closeModal('modal-add-candidato');
         loadCandidatosAdmin();
+    }
+}
+
+function previewCandidatoFoto(input) {
+    const preview = document.getElementById('candidato-foto-preview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
     }
 }
 
@@ -204,6 +266,7 @@ async function addPartido(e) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadCandidatosAdmin();
     loadPartidosAdmin();
 });
 </script>

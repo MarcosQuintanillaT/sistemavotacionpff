@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elecciones Estudiantiles 2026</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=13">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗳️</text></svg>">
 </head>
 <body>
@@ -24,9 +24,9 @@
 
         <!-- Header -->
         <div class="auth-header">
-            <div class="auth-logo">🗳️</div>
-            <h1>Elecciones Estudiantiles</h1>
-            <p>Gobierno Estudiantil 2026 — Tu voz cuenta</p>
+            <img src="imagen/logoPFF.png" alt="Logo" style="width:70px;height:auto;margin-bottom:0;">
+            <h1 style="margin-top:5px;">Elecciones Estudiantiles CEMG Pascual Fajardo</h1>
+            <p>Gobierno Estudiantil 2026</p>
         </div>
 
         <!-- Tabs -->
@@ -38,21 +38,18 @@
         <!-- Login Form -->
         <form id="form-login" class="auth-form" onsubmit="handleLogin(event)">
             <div class="input-group">
-                <label>Correo Electrónico</label>
-                <span class="input-icon">📧</span>
-                <input type="email" name="email" placeholder="tu@email.edu" required>
+                <label>Identidad del Estudiante</label>
+                <span class="input-icon">🎓</span>
+                <input type="text" name="codigo" placeholder="Ej: 1612200800130" required>
             </div>
             <div class="input-group">
                 <label>Contraseña</label>
                 <span class="input-icon">🔒</span>
-                <input type="password" name="password" placeholder="Tu contraseña" required>
+                <input type="password" name="password" placeholder="Ingrese su contraseña" maxlength="4" pattern="[0-9]{4}" required>
             </div>
             <button type="submit" class="btn btn-primary btn-lg" style="width:100%;margin-top:8px;">
                 Entrar al Sistema →
             </button>
-            <div class="auth-footer" style="margin-top:16px;">
-                <small class="text-muted">Admin: admin@elecciones.edu / admin123</small>
-            </div>
         </form>
 
         <!-- Register Form -->
@@ -62,14 +59,29 @@
                 <input type="text" name="nombre" placeholder="Tu nombre completo" required>
             </div>
             <div class="input-group">
-                <label>Código Estudiantil *</label>
-                <input type="text" name="codigo_estudiantil" placeholder="Ej: EST-2026-001" required>
+                <label>Identidad del Estudiante *</label>
+                <input type="text" name="identidad" placeholder="Ej: 1612200800130" required>
             </div>
             <div class="input-group">
                 <label>Correo Electrónico *</label>
                 <input type="email" name="email" placeholder="tu@email.edu" required>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="input-group">
+                <label>Rol</label>
+                <select name="rol" id="register-rol" onchange="toggleAdminFields()">
+                    <option value="votante">Estudiante</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <div class="input-group" id="admin-code-field" style="display:none;">
+                <label>Código de Administrador *</label>
+                <input type="password" name="admin_code" placeholder="Código secreto">
+            </div>
+            <div class="input-group" id="password-field" style="display:none;">
+                <label>Contraseña Personal *</label>
+                <input type="password" name="password" placeholder="Mínimo 4 dígitos" minlength="4">
+            </div>
+            <div id="grado-seccion-fields" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="input-group">
                     <label>Grado</label>
                     <select name="grado">
@@ -82,14 +94,14 @@
                         <option>12vo</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label>Sección</label>
-                    <input type="text" name="seccion" placeholder="A, B, C...">
-                </div>
-            </div>
             <div class="input-group">
-                <label>Contraseña *</label>
-                <input type="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+                <label>Sección</label>
+                <select name="seccion">
+                    <option value="">Seleccionar</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
             </div>
             <button type="submit" class="btn btn-secondary btn-lg" style="width:100%;margin-top:8px;">
                 Crear Cuenta ✨
@@ -99,6 +111,36 @@
 </div>
 
 <script>window.API_BASE_URL = 'api';</script>
+<script>
+function toggleAdminFields() {
+    const rol = document.getElementById('register-rol').value;
+    const adminCodeField = document.getElementById('admin-code-field');
+    const passwordField = document.getElementById('password-field');
+    const gradoSeccionFields = document.getElementById('grado-seccion-fields');
+    const adminCodeInput = adminCodeField.querySelector('input');
+    const passwordInput = passwordField.querySelector('input');
+    
+    if (rol === 'admin') {
+        adminCodeField.style.display = 'block';
+        passwordField.style.display = 'block';
+        gradoSeccionFields.style.display = 'none';
+        adminCodeInput.setAttribute('required', 'required');
+        passwordInput.setAttribute('required', 'required');
+        passwordInput.setAttribute('maxlength', '20');
+        passwordInput.setAttribute('pattern', '.{4,}');
+    } else {
+        adminCodeField.style.display = 'none';
+        passwordField.style.display = 'none';
+        gradoSeccionFields.style.display = 'grid';
+        adminCodeInput.removeAttribute('required');
+        passwordInput.removeAttribute('required');
+        passwordInput.removeAttribute('maxlength');
+        passwordInput.removeAttribute('pattern');
+        adminCodeInput.value = '';
+        passwordInput.value = '';
+    }
+}
+</script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ $user = currentUser();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados — Elecciones Estudiantiles</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=13">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
 </head>
 <body>
@@ -76,8 +76,8 @@ $user = currentUser();
                     <svg width="120" height="120">
                         <defs>
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#6366f1" />
-                                <stop offset="100%" style="stop-color:#ec4899" />
+                                <stop offset="0%" style="stop-color:#22c55e" />
+                                <stop offset="100%" style="stop-color:#06b6d4" />
                             </linearGradient>
                         </defs>
                         <circle class="progress-bg" cx="60" cy="60" r="52" />

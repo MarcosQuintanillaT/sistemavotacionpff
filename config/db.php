@@ -1,37 +1,31 @@
 <?php
 // ==========================================
 // CONFIGURACIÓN DE BASE DE DATOS
-// Compatible con: XAMPP, Railway, Heroku, InfinityFree
 // ==========================================
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 ini_set('display_errors', '0');
 
 // ==========================================
-// DETECCIÓN AUTOMÁTICA DE ENTORNO
-// Railway proporciona variables de entorno automáticamente
+// INFINITYFREE - Configuración manual
 // ==========================================
+// Cambia estos valores por los de tu InfinityFree
 
-if (getenv('MYSQLHOST') || getenv('MYSQL_URL')) {
-    // === RAILWAY / CLOUD ===
-    if (getenv('MYSQL_URL')) {
-        $db_url = parse_url(getenv('MYSQL_URL'));
-        define('DB_HOST', $db_url['host']);
-        define('DB_USER', $db_url['user']);
-        define('DB_PASS', $db_url['pass']);
-        define('DB_NAME', ltrim($db_url['path'], '/'));
-    } else {
-        define('DB_HOST', getenv('MYSQLHOST'));
-        define('DB_USER', getenv('MYSQLUSER'));
-        define('DB_PASS', getenv('MYSQLPASSWORD'));
-        define('DB_NAME', getenv('MYSQLDATABASE'));
-    }
-    define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
+$inf_host = 'sqlXXX.infinityfree.com';  // Reemplaza con tu host
+$inf_user = 'tu_usuario_mysql';          // Reemplaza con tu usuario
+$inf_pass = 'tu_password';               // Reemplaza con tu password
+$inf_name = 'tu_base_de_datos';          // Reemplaza con tu nombre BD
 
+if ($inf_user !== 'tu_usuario_mysql') {
+    define('DB_HOST', $inf_host);
+    define('DB_USER', $inf_user);
+    define('DB_PASS', $inf_pass);
+    define('DB_NAME', $inf_name);
+    define('DB_PORT', '3306');
 } else {
-    // === LOCAL (XAMPP) ===
+    // Local (XAMPP)
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'elecciones_estudiantiles');
+    define('DB_NAME', 'eleccion_estudiantil');
     define('DB_USER', 'root');
     define('DB_PASS', '');
     define('DB_PORT', '3306');
@@ -60,9 +54,9 @@ function getConnection() {
         }
 
         echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Error</title>';
-        echo '<style>body{font-family:sans-serif;background:#0a192f;color:#e6f1ff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}';
-        echo '.box{background:#112240;padding:40px;border-radius:16px;text-align:center;max-width:500px}';
-        echo '.icon{font-size:64px}h1{color:#ff6b6b}p{color:#8892b0;line-height:1.6}</style></head><body>';
+        echo '<style>body{font-family:sans-serif;background:#040d08;color:#e8fce8;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}';
+        echo '.box{background:#0a1f12;padding:40px;border-radius:16px;text-align:center;max-width:500px}';
+        echo '.icon{font-size:64px}h1{color:#ef4444}p{color:#7a9a7a;line-height:1.6}</style></head><body>';
         echo '<div class="box"><div class="icon">🔌</div><h1>Error de Conexión</h1>';
         echo '<p>No se pudo conectar a la base de datos.</p>';
         echo '</div></body></html>';
