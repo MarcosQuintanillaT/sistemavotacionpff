@@ -7,14 +7,12 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 ini_set('display_errors', '0');
 
 // ==========================================
-// INFINITYFREE - Configuración manual
+// INFINITYFREE - Configuración
 // ==========================================
-// Cambia estos valores por los de tu InfinityFree
-
-$inf_host = 'sqlXXX.infinityfree.com';  // Reemplaza con tu host
-$inf_user = 'tu_usuario_mysql';          // Reemplaza con tu usuario
-$inf_pass = 'tu_password';               // Reemplaza con tu password
-$inf_name = 'tu_base_de_datos';          // Reemplaza con tu nombre BD
+$inf_host = 'sql306.infinityfree.com';
+$inf_user = 'if0_41510758';
+$inf_pass = '4WVvpqTNjCj';
+$inf_name = 'if0_41510758_eleccion_estudiantil';
 
 if ($inf_user !== 'tu_usuario_mysql') {
     define('DB_HOST', $inf_host);
