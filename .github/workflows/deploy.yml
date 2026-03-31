@@ -20,9 +20,9 @@ jobs:
       - name: Deploy to InfinityFree via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.ftpupload.net }}
+          username: ${{ secrets.if0_41510758 }}
+          password: ${{ secrets.4WVvpqTNjCj }}
           local_dir: ./
           exclude: |
             **/.git*
